@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Track Investor Portfolios{% endblock %}</title>
+    <style>
+        body { font-family: Arial; margin:40px; }
+        nav {
+            margin-bottom: 25px;
+        }
+        nav a {
+            margin-right: 15px;
+            text-decoration:none;
+            color: #007bff;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="{% url 'transaction_list' %}">Transactions</a>
+        <a href="{% url 'transaction_report' %}">Report</a>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

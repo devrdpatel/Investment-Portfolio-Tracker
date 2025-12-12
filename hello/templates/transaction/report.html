@@ -1,0 +1,94 @@
+{% extends "index.html" %}
+
+{% block title %}Holdings Report{% endblock %}
+
+{% block content %}
+<head>
+    <title>Transaction Report</title>
+    <style>
+        body { font-family: Arial; margin:40px; }
+        table { border-collapse:collapse; width:100%; }
+        th, td { border:1px solid #ccc; padding:8px; }
+        th { background:#f0f0f0; }
+        form { margin-bottom:25px; }
+    </style>
+</head>
+<body>
+
+<h1>Transaction Report</h1>
+
+<form method="get">
+
+    <label>Portfolio:</label>
+    <select name="portfolio">
+        <option value="">--- All ---</option>
+        {% for p in portfolios %}
+            <option value="{{ p.portfolioID }}" {% if p.portfolioID|stringformat:'s' == selected_portfolio %}selected{% endif %}>
+                {{ p.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Stock:</label>
+    <select name="stock">
+        <option value="">--- All ---</option>
+        {% for s in stocks %}
+            <option value="{{ s.stockID }}" {% if s.stockID|stringformat:'s' == selected_stock %}selected{% endif %}>
+                {{ s.ticker }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Order Type:</label>
+    <select name="order_type">
+        <option value="">--- All ---</option>
+        <option value="BUY" {% if selected_order_type == "BUY" %}selected{% endif %}>Buy</option>
+        <option value="SELL" {% if selected_order_type == "SELL" %}selected{% endif %}>Sell</option>
+    </select>
+
+    <label>Start Date:</label>
+    <input type="date" name="start" value="{{ start }}">
+
+    <label>End Date:</label>
+    <input type="date" name="end" value="{{ end }}">
+
+    <button type="submit">Filter</button>
+</form>
+
+<h3>Report Results</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Portfolio</th>
+            <th>Stock</th>
+            <th>Order Type</th>
+            <th>Quantity</th>
+            <th>Purchase Price</th>
+            <th>Purchase Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.portfolio.name }}</td>
+            <td>{{ t.stock.ticker }}</td>
+            <td>{{ t.order_type }}</td>
+            <td>{{ t.quantity }}</td>
+            <td>${{ t.purchase_price }}</td>
+            <td>{{ t.purchase_date }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No results found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Summary Statistics</h3>
+<ul>
+    <li>Total Quantity: {{ stats.avg_qty|default:"--" }}</li>
+    <li>Average Purchase Price: {{ stats.avg_price|default:"--" }}</li>
+</ul>
+
+</body>
+{% endblock %}
